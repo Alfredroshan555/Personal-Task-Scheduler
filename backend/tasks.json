@@ -1,0 +1,8 @@
+[
+  {
+    "id": "1",
+    "name": "Vitamin D supplement notification",
+    "schedule": "45 9 * * 4",
+    "message": "Take Vitamin D supplement after food in the morning/evening"
+  }
+]
