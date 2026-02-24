@@ -18,7 +18,7 @@ A robust and intuitive task management system designed to streamline your produc
 - **Node.js & Express**: Core server and API framework.
 - **node-cron**: Precision task scheduling engine.
 - **Nodemailer**: Reliable email delivery service.
-- **FileSystem (JSON)**: Lightweight and portable task storage.
+- **MongoDB & Mongoose**: Flexible and scalable NoSQL database storage.
 
 ### Mobile App
 
@@ -46,10 +46,15 @@ A robust and intuitive task management system designed to streamline your produc
 ## 📁 Project Structure
 
 ```text
-├── backend/            # Express server and scheduling logic
+├── backend/            # Modularized Express server
 │   ├── index.js        # Main entry point
-│   ├── tasks.json      # Local task storage
-│   └── notifier.js     # Email notification logic
+│   ├── db.js           # Database connection
+│   ├── controllers/    # Request handling logic
+│   ├── models/         # Database schemas
+│   ├── routes/         # API route definitions
+│   └── services/       # Scheduling and notification services
+│       ├── schedulerService.js
+│       └── notifier.js
 ├── mobile-app/         # react-native-paper powered mobile application
 │   ├── src/            # Source code (components, hooks, theme)
 │   └── App.js          # Main app container
