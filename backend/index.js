@@ -22,6 +22,9 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.get("/", (req, res) => {
+  res.json({ status: "healthy", message: "Task Scheduler API is running" });
+});
 app.use("/tasks", taskRoutes);
 
 // Start the Server and Scheduler
