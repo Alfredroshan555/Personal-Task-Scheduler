@@ -24,6 +24,7 @@ async function startScheduler() {
     }
 
     tasks.forEach((task) => {
+      console.log(`📝 Processing task: "${task.name}" (Type: ${task.type})`);
       if (task.type === "recurring") {
         // Validate the cron expression before scheduling
         if (!cron.validate(task.schedule)) {
@@ -35,7 +36,7 @@ async function startScheduler() {
 
         const job = cron.schedule(task.schedule, async () => {
           console.log(
-            `⏰ Triggering recurring task: "${task.name}" - ${new Date().toISOString()}`,
+            `⏰ [${new Date().toISOString()}] Triggering recurring task: "${task.name}"`,
           );
           try {
             await sendNotification(task.message);
@@ -51,7 +52,7 @@ async function startScheduler() {
         });
         runningJobs.push(job);
         console.log(
-          `✅ Scheduled Recurring: "${task.name}" (${task.schedule})`,
+          `✅ Scheduled Recurring: "${task.name}" -> [${task.schedule}]`,
         );
       } else if (task.type === "onetime") {
         const now = new Date();
