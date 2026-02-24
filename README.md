@@ -36,9 +36,9 @@ A robust and intuitive task management system designed to streamline your produc
 3. Create a `.env` file with your email configuration (see `.env.example`).
 4. Start the server: `npm run dev`.
 
-### 2. Mobile App Setup
+### 2. Frontend (Mobile App) Setup
 
-1. Navigate to the `mobile-app` directory.
+1. Navigate to the `frontend` directory.
 2. Install dependencies: `npm install`.
 3. Update the API base URL in `src/hooks/useTasks.js` (if necessary).
 4. Run the app: `npm run start`.
@@ -55,8 +55,8 @@ A robust and intuitive task management system designed to streamline your produc
 │   └── services/       # Scheduling and notification services
 │       ├── schedulerService.js
 │       └── notifier.js
-├── mobile-app/         # react-native-paper powered mobile application
+├── frontend/           # React Native (Expo) mobile application
 │   ├── src/            # Source code (components, hooks, theme)
-│   └── App.js          # Main app container
+│   └── App.js          # Main app entry point
 └── README.md           # Project documentation
 ```
