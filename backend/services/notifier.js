@@ -58,8 +58,10 @@ async function sendNotification(message) {
   try {
     const info = await transporter.sendMail(mailOptions);
     console.log(`✅ Email sent: ${info.messageId}`);
+    return true; // Indicate success
   } catch (error) {
     console.error("❌ Failed to send email:", error.message);
+    throw error; // Rethrow to allow caller to handle failure
   }
 }
 

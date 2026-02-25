@@ -44,10 +44,8 @@ async function startScheduler() {
               `📲 Notification for "${task.name}" sent successfully.`,
             );
           } catch (err) {
-            console.error(
-              `❌ Error sending notification for "${task.name}":`,
-              err.message,
-            );
+            // Error is already logged by sendNotification, we just need to catch it here
+            // to prevent the "sent successfully" message from showing up.
           }
         });
         runningJobs.push(job);
