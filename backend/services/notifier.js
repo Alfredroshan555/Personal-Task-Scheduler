@@ -1,69 +1,50 @@
-/**
- * notifier.js
- * Handles the logic for sending notifications via Email using Nodemailer.
- */
-
 require("dotenv").config();
-const nodemailer = require("nodemailer");
-
-// Destructure credentials from environment variables
-const {
-  EMAIL_SERVICE,
-  EMAIL_HOST,
-  EMAIL_PORT,
-  EMAIL_SECURE,
-  EMAIL_USER,
-  EMAIL_PASS,
-  EMAIL_FROM,
-  EMAIL_TO,
-} = process.env;
+const twilio = require("twilio");
 
 /**
- * Creates a reusable transporter object using the default SMTP transport.
- */
-const transporter = nodemailer.createTransport({
-  service: EMAIL_SERVICE, // e.g., 'gmail'
-  host: EMAIL_HOST, // e.g., 'smtp.example.com'
-  port: EMAIL_PORT, // e.g., 587
-  secure: EMAIL_SECURE === "true", // true for 465, false for other ports
-  auth: {
-    user: EMAIL_USER,
-    pass: EMAIL_PASS,
-  },
-  family: 4, // Force IPv4 to resolve ENETUNREACH IPv6 issues on Render
-});
-
-/**
- * Sends an email notification to the configured recipient.
- *
- * @param {string} message - The text content of the notification.
- * @returns {Promise<void>}
+ * Sends an email using Nodemailer's built-in OAuth2 support.
  */
 async function sendNotification(message) {
-  // Check if critical credentials are set
-  if (!EMAIL_USER || !EMAIL_PASS || !EMAIL_TO) {
-    console.error(
-      "❌ Error: Missing email configuration in .env file (EMAIL_USER, EMAIL_PASS, EMAIL_TO).",
-    );
-    return;
-  }
+  const sid = process.env.TWILIO_ACCOUNT_SID?.trim();
+  const token = process.env.TWILIO_AUTH_TOKEN?.trim();
+  const from = process.env.TWILIO_WHATSAPP_FROM?.trim();
+  const to = process.env.WHATSAPP_TO?.trim();
 
-  const mailOptions = {
-    from: EMAIL_FROM || EMAIL_USER, // Sender address
-    to: EMAIL_TO, // List of receivers
-    subject: "Task Scheduler Notification", // Subject line
-    text: message, // Plain text body
-    // html: `<p>${message}</p>`, // HTML body (optional)
-  };
+  if (!sid || !token || !from || !to) {
+    console.error("❌ Twilio credentials missing in .env");
+    console.error(
+      `Status: SID=${!!sid}, Token=${!!token}, From=${!!from}, To=${!!to}`,
+    );
+    return false;
+  }
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ Email sent: ${info.messageId}`);
-    return true; // Indicate success
+    // Diagnostic logging (Masked for safety)
+    console.log(`🔍 Twilio Auth Attempt:`);
+    console.log(
+      `   - SID: ${sid.substring(0, 5)}...${sid.substring(sid.length - 4)}`,
+    );
+    console.log(`   - Token Length: ${token.length}`);
+    console.log(`   - From: ${from}`);
+    console.log(`   - To: ${to}`);
+
+    const client = twilio(sid, token);
+
+    const response = await client.messages.create({
+      from: from,
+      to: to,
+      body: `⏰ *Task Notification*\n\n${message}`,
+    });
+
+    console.log(`✅ WhatsApp message sent! SID: ${response.sid}`);
+    return true;
   } catch (error) {
-    console.error("❌ Failed to send email:", error.message);
-    throw error; // Rethrow to allow caller to handle failure
+    console.error("❌ Twilio WhatsApp Error!");
+    console.error(`- Error Code: ${error.code || "N/A"}`);
+    console.error(`- Message: ${error.message}`);
+    throw error;
   }
 }
+33;
 
 module.exports = { sendNotification };
